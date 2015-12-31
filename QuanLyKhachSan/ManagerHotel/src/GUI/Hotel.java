@@ -6,6 +6,11 @@
 package GUI;
 
 import java.beans.PropertyVetoException;
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,14 +19,15 @@ import java.util.logging.Logger;
  * @author ASUS
  */
 public class Hotel extends javax.swing.JFrame {
-
+    private int max;
+    private int bc=8;
     /**
      * Creates new form Main
      */
     public Hotel() {
         initComponents();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -45,11 +51,12 @@ public class Hotel extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         LoginBt = new javax.swing.JButton();
         ResetBt = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        loginStatus = new javax.swing.JLabel();
         Wellcome = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
+        StatusTxt = new javax.swing.JLabel();
         ProgressBar = new javax.swing.JProgressBar();
+        jLabel4 = new javax.swing.JLabel();
         Menu = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -58,7 +65,6 @@ public class Hotel extends javax.swing.JFrame {
         staff_frame.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         staff_frame.setTitle("Staff Manager");
         staff_frame.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/staff.png"))); // NOI18N
-        staff_frame.setNormalBounds(new java.awt.Rectangle(0, 0, 87, 0));
         staff_frame.setPreferredSize(new java.awt.Dimension(800, 600));
         staff_frame.setVisible(true);
 
@@ -99,11 +105,11 @@ public class Hotel extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Andrews Institute of technical sciences and Management");
+        setTitle("Project Manager Hotel of Students Aptech FPT University");
         setBackground(new java.awt.Color(51, 51, 51));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setLocation(new java.awt.Point(200, 20));
         setName("frame1"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(963, 664));
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -126,15 +132,16 @@ public class Hotel extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(staff_bt, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(884, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(staff_bt, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(staff_bt)
+                .addGap(0, 9, Short.MAX_VALUE))
         );
 
         MainFrame.setBackground(new java.awt.Color(153, 153, 255));
-        MainFrame.setPreferredSize(new java.awt.Dimension(0, 0));
 
         LoginFrame.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         LoginFrame.setTitle("Login");
@@ -171,7 +178,7 @@ public class Hotel extends javax.swing.JFrame {
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(loginStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(LoginFrameLayout.createSequentialGroup()
                         .addGap(62, 62, 62)
                         .addComponent(LoginBt, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -201,7 +208,7 @@ public class Hotel extends javax.swing.JFrame {
                     .addComponent(ResetBt, javax.swing.GroupLayout.PREFERRED_SIZE, 28, Short.MAX_VALUE)
                     .addComponent(LoginBt))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 15, Short.MAX_VALUE))
+                .addComponent(loginStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 15, Short.MAX_VALUE))
         );
 
         LoginFrameLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {LoginBt, ResetBt});
@@ -225,30 +232,36 @@ public class Hotel extends javax.swing.JFrame {
         jPanel2.setMinimumSize(new java.awt.Dimension(0, 0));
         jPanel2.setPreferredSize(new java.awt.Dimension(653, 35));
 
-        jLabel4.setText("Please Login !");
+        StatusTxt.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        StatusTxt.setText(" Login Please !");
+        StatusTxt.setMaximumSize(new java.awt.Dimension(75, 15));
+        StatusTxt.setMinimumSize(new java.awt.Dimension(75, 15));
+        StatusTxt.setPreferredSize(new java.awt.Dimension(75, 15));
+
+        jLabel4.setText("Copyright @ 2016");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(243, 243, 243)
+                .addComponent(StatusTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
                 .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 419, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(StatusTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(21, 21, 21))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         Menu.setMaximumSize(new java.awt.Dimension(60, 32769));
-        Menu.setMinimumSize(new java.awt.Dimension(0, 2));
         Menu.setPreferredSize(new java.awt.Dimension(60, 21));
 
         jMenu1.setText("File");
@@ -265,7 +278,7 @@ public class Hotel extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 963, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 963, Short.MAX_VALUE)
-            .addComponent(MainFrame, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(MainFrame)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,11 +292,54 @@ public class Hotel extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+// chinh dong chay cua progress
+    public void progress(int bc1) {
+        max = bc1;
+        Thread a;
+        ProgressBar.setStringPainted(true);
+        a = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (max == 99) {
+                    bc = 10;
+                } else {
+                    if (max == 200) {
+                        bc = 2;
+                        max = 100;
+                    } else {
+                        bc = 5;
+                    }
+                }
+                ProgressBar.setValue(0);
+                for (int i = 1; i <= max; i++) {
+                    try {
+                        ProgressBar.setValue(i);
+                        Thread.sleep(bc);
+                    } catch (InterruptedException ex) {
+                    }
+                }
+                if (ProgressBar.getValue() == 99) {
+                    loginStatus.setText("Login error ! UserName/Password is not valid !");
+                }
+           }
+        });
+        a.start();
+    }
+    
+    // dinh dang thoi gian 
+    public String formatDate(){
+        DateFormat dateformat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date=new Date();
+        String strDate=dateformat.format(date); 
+        return strDate;
+    }
+    
     private void LoginBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtActionPerformed
         // TODO add your handling code here:
         LoginFrame.setVisible(false);
         Wellcome.setVisible(true);
+        this.progress(100);
+        StatusTxt.setText(formatDate());
     }//GEN-LAST:event_LoginBtActionPerformed
 
     private void staff_btActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_staff_btActionPerformed
@@ -341,10 +397,10 @@ public class Hotel extends javax.swing.JFrame {
     private javax.swing.JMenuBar Menu;
     private javax.swing.JProgressBar ProgressBar;
     private javax.swing.JButton ResetBt;
+    private javax.swing.JLabel StatusTxt;
     private javax.swing.JButton Wellcome;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JMenu jMenu1;
@@ -355,6 +411,7 @@ public class Hotel extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel loginStatus;
     private javax.swing.JButton staff_bt;
     private javax.swing.JInternalFrame staff_frame;
     // End of variables declaration//GEN-END:variables
