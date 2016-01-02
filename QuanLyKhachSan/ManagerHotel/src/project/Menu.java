@@ -6,13 +6,26 @@
 package project;
 
 import java.awt.BorderLayout;
+import java.beans.PropertyChangeListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Vector;
 import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.text.MaskFormatter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
 import javax.swing.undo.UndoManager;
 
 /**
@@ -28,15 +41,97 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
         initComponents();
         setLocationRelativeTo(null);
         txaNote.getDocument().addUndoableEditListener(manager);
-       
     }
-    public void showRoom(String code){
-            DefaultTreeModel model = (DefaultTreeModel) jTree1.getModel();
-            DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-            root = new DefaultMutableTreeNode("Single room");
-//            root.add(root);
-            root.add(new DefaultMutableTreeNode("Hi"));
-//            model.reload(root);
+    DateFormat dateformat = new SimpleDateFormat("HH:mm");
+    Calendar cal = Calendar.getInstance();
+    String currenttime = dateformat.format(cal.getTime());
+    public void showTable(String Code){
+        try{
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String connectionString = "jdbc:sqlserver://localhost:1433;databaseName=HotelManagement";
+            Connection con = DriverManager.getConnection(connectionString, "taobivocam9x", "duc12345");
+            PreparedStatement ps = con.prepareStatement(Code);
+            ps.execute();
+            ps.close();
+            con.close();
+        }catch(ClassNotFoundException e){
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Cannot connect to database");
+        }
+    }
+    public void addInformation(){
+        try{
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String connectionString = "jdbc:sqlserver://localhost:1433;databaseName=HotelManagement";
+            Connection con = DriverManager.getConnection(connectionString, "taobivocam9x", "duc12345");
+            String strName = txtName.getText();
+            String strGender = (String)cbGender.getSelectedItem();
+            String strNational = txtNationality.getText();
+            String strDate = (String)cbDay.getSelectedItem();
+            String strMonth = (String)cbMonth.getSelectedItem();
+            String strYears = (String)cbYear.getSelectedItem();
+            String strDateOfBirth = strYears+"-"+strMonth+"-"+strDate;
+            String strPlaceOfBirth = txtPlaceOfBirth.getText();
+            String strAddress = txaAddress.getText();
+            int PhoneNumber = Integer.parseInt(txfPhone.getText());
+            String strEmail = txtEmail.getText();
+            int strCMND = Integer.parseInt(txfCMND.getText());
+            String strIssuedBy = txtIssuedBy.getText();
+            String strNote = txaNote.getText();
+            PreparedStatement ps = con.prepareStatement("insert into Customer values(?,?,?,?,?,?,?,?,?,?,?);");
+            ps.setString(1, strName);
+            ps.setString(2, strGender);
+            ps.setString(3, strNational);
+            ps.setString(4, strDateOfBirth);
+            ps.setString(5, strPlaceOfBirth);
+            ps.setString(6, strAddress);
+            ps.setInt(7, PhoneNumber);
+            ps.setString(8, strEmail);
+            ps.setInt(9, strCMND);
+            ps.setString(10, strIssuedBy);
+            ps.setString(11, strNote);
+            ps.execute();
+            ps.close();
+            con.close();
+        }catch(ClassNotFoundException e){
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+    public void addCheckIn(){
+        try{
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String connectionString = "jdbc:sqlserver://localhost:1433;databaseName=HotelManagement";
+            Connection con = DriverManager.getConnection(connectionString, "taobivocam9x", "duc12345");
+            String strName = txtName.getText();
+            String strCheckIn = txfDayBook.getText();
+            String strDateArrived = txfDayArrived.getText();
+            String strHoursArrived = txtHours.getText();
+            String strCheckOut = txfCheckOut.getText();
+            int Adult = Integer.parseInt(txfAdult.getText());
+            int Child = Integer.parseInt(txfChild.getText());
+            int RoomNumber = Integer.parseInt(txfRoomNumber.getText());
+            float deposit = Float.parseFloat(txfDeposit.getText());
+            String request = txaRequest.getText();
+            PreparedStatement ps = con.prepareStatement("insert into CheckIn values(?,?,?,?,?,?,?,?,?,?);");
+            ps.setString(1, strName);
+            ps.setString(2, strCheckIn);
+            ps.setString(3, strDateArrived);
+            ps.setString(4, strHoursArrived);
+            ps.setString(5, strCheckOut);
+            ps.setInt(6, Adult);
+            ps.setInt(7, Child);
+            ps.setInt(8, RoomNumber);
+            ps.setFloat(9, deposit);
+            ps.setString(10, request);
+            ps.execute();
+            ps.close();
+            con.close();
+        }catch(ClassNotFoundException ex){
+            ex.printStackTrace();
+        }catch(SQLException ex){
+        ex.printStackTrace();
+        }
     }
 
     /**
@@ -54,8 +149,35 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pnCheckIN = new javax.swing.JPanel();
+        dialogCheckIn = new javax.swing.JDialog();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        pnRequest2 = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        txaRequest = new javax.swing.JTextArea();
+        txfDayBook = new javax.swing.JFormattedTextField();
+        txfDayArrived = new javax.swing.JFormattedTextField();
+        txtHours = new javax.swing.JTextField();
+        txfCheckOut = new javax.swing.JFormattedTextField();
+        txfChild = new javax.swing.JFormattedTextField();
+        txfAdult = new javax.swing.JFormattedTextField();
+        txfRoomNumber = new javax.swing.JFormattedTextField();
+        txfDeposit = new javax.swing.JFormattedTextField();
+        btnOk = new javax.swing.JButton();
+        dialogSetting = new javax.swing.JDialog();
+        jPanel2 = new javax.swing.JPanel();
+        jComboBox1 = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        btnSave = new javax.swing.JButton();
         jToolBar1 = new javax.swing.JToolBar();
         tbAdmin = new javax.swing.JToggleButton();
         tbUndo = new javax.swing.JToggleButton();
@@ -63,6 +185,7 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
         tbSetting = new javax.swing.JToggleButton();
         tbSearch = new javax.swing.JToggleButton();
         jPanel1 = new javax.swing.JPanel();
+        btnOk1 = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
@@ -95,39 +218,223 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
         lblDateOfBirthWarning = new javax.swing.JLabel();
         lblPhoneWarning = new javax.swing.JLabel();
         lblIDWarning = new javax.swing.JLabel();
-        txfDate = new javax.swing.JFormattedTextField();
         lblPassport = new javax.swing.JLabel();
-        lblDay = new javax.swing.JLabel();
-        lblMonth = new javax.swing.JLabel();
-        txfMonth = new javax.swing.JFormattedTextField();
-        jButton2 = new javax.swing.JButton();
+        cbDay = new javax.swing.JComboBox();
+        cbMonth = new javax.swing.JComboBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jmHethong = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jmDanhmuc = new javax.swing.JMenu();
 
-        pnCheckIN.setMaximumSize(new java.awt.Dimension(300, 322));
-        pnCheckIN.setPreferredSize(new java.awt.Dimension(300, 322));
+        dialogCheckIn.setTitle("Đặt phòng");
+        dialogCheckIn.setMinimumSize(new java.awt.Dimension(400, 550));
 
-        jLabel1.setText("jLabel1");
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Đặt phòng"));
+        jPanel4.setMaximumSize(new java.awt.Dimension(450, 550));
+        jPanel4.setMinimumSize(new java.awt.Dimension(450, 550));
+        jPanel4.setPreferredSize(new java.awt.Dimension(450, 550));
+        jPanel4.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jPanel4AncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
 
-        javax.swing.GroupLayout pnCheckINLayout = new javax.swing.GroupLayout(pnCheckIN);
-        pnCheckIN.setLayout(pnCheckINLayout);
-        pnCheckINLayout.setHorizontalGroup(
-            pnCheckINLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnCheckINLayout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(jLabel1)
-                .addContainerGap(417, Short.MAX_VALUE))
+        jLabel19.setText("Ngày Đặt");
+
+        jLabel20.setText("Ngày Đến");
+
+        jLabel21.setText("Giờ Đến");
+
+        jLabel22.setText("Ngày Đi");
+
+        jLabel23.setText("Người Lớn");
+
+        jLabel24.setText("Trẻ Em");
+
+        jLabel25.setText("Số Phòng");
+
+        jLabel26.setText("Đưa trước");
+
+        pnRequest2.setBackground(new java.awt.Color(255, 255, 255));
+        pnRequest2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Yêu Cầu Của Khách Hàng"));
+        pnRequest2.setLayout(new java.awt.BorderLayout());
+
+        txaRequest.setColumns(20);
+        txaRequest.setRows(5);
+        jScrollPane6.setViewportView(txaRequest);
+
+        pnRequest2.add(jScrollPane6, java.awt.BorderLayout.CENTER);
+
+        try{
+            txfDayBook = new JFormattedTextField(new MaskFormatter("####-##-##"));
+        }catch(java.text.ParseException e){
+            e.printStackTrace();
+        }
+
+        try{
+            txfDayArrived = new JFormattedTextField(new MaskFormatter("####-##-##"));
+        }catch(java.text.ParseException e){
+            e.printStackTrace();
+        }
+
+        try{
+            txfCheckOut = new JFormattedTextField(new MaskFormatter("####-##-##"));
+        }catch(java.text.ParseException e){
+            e.printStackTrace();
+        }
+
+        try{
+            txfRoomNumber = new JFormattedTextField(new MaskFormatter("###"));
+        }catch(java.text.ParseException e){
+            e.printStackTrace();
+        }
+
+        try{
+            txfDeposit = new JFormattedTextField(new MaskFormatter("###.###"));
+        }catch(java.text.ParseException e){
+            e.printStackTrace();
+        }
+
+        btnOk.setText("OK");
+        btnOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOkActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(pnRequest2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel19)
+                                    .addComponent(jLabel20)
+                                    .addComponent(jLabel21)
+                                    .addComponent(jLabel22)
+                                    .addComponent(jLabel23)
+                                    .addComponent(jLabel26)
+                                    .addComponent(jLabel25))
+                                .addGap(22, 22, 22)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtHours, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(txfDeposit, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txfRoomNumber, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                                .addComponent(txfAdult, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jLabel24)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txfChild, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txfCheckOut)
+                                    .addComponent(txfDayBook)
+                                    .addComponent(txfDayArrived)))))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(162, 162, 162)
+                        .addComponent(btnOk)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        pnCheckINLayout.setVerticalGroup(
-            pnCheckINLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnCheckINLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(jLabel1)
-                .addContainerGap(458, Short.MAX_VALUE))
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel19)
+                    .addComponent(txfDayBook, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel20)
+                    .addComponent(txfDayArrived, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(txtHours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(txfCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel23)
+                    .addComponent(txfAdult, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel24)
+                    .addComponent(txfChild, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel25)
+                    .addComponent(txfRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel26)
+                    .addComponent(txfDeposit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(pnRequest2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnOk)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        dialogCheckIn.getContentPane().add(jPanel4, java.awt.BorderLayout.CENTER);
+
+        jPanel2.setMaximumSize(new java.awt.Dimension(450, 550));
+        jPanel2.setMinimumSize(new java.awt.Dimension(450, 550));
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Vietnamese", "English", "Italy" }));
+
+        jLabel1.setText("Language");
+
+        jLabel2.setText("Full screen");
+
+        btnSave.setText("Save");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(65, 65, 65)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1))
+                .addGap(32, 32, 32)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSave)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCheckBox1))
+                .addContainerGap(182, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(70, 70, 70)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 283, Short.MAX_VALUE)
+                .addComponent(btnSave)
+                .addGap(93, 93, 93))
+        );
+
+        dialogSetting.getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Quản Lý Khách Sạn");
@@ -138,6 +445,11 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
         tbAdmin.setFocusable(false);
         tbAdmin.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         tbAdmin.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        tbAdmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbAdminActionPerformed(evt);
+            }
+        });
         jToolBar1.add(tbAdmin);
 
         tbUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/project/undo.png"))); // NOI18N
@@ -166,6 +478,11 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
         tbSetting.setFocusable(false);
         tbSetting.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         tbSetting.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        tbSetting.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbSettingActionPerformed(evt);
+            }
+        });
         jToolBar1.add(tbSetting);
 
         tbSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/project/searchicon.png"))); // NOI18N
@@ -175,48 +492,39 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
         jToolBar1.add(tbSearch);
 
         jPanel1.setPreferredSize(new java.awt.Dimension(460, 322));
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        btnOk1.setText("OK");
+        btnOk1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOk1ActionPerformed(evt);
+            }
+        });
 
         jSplitPane1.setPreferredSize(new java.awt.Dimension(459, 350));
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Các loại Phòng");
         javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Phòng đơn");
-        javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("blue");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("violet");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("red");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("yellow");
-        treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Phòng đôi");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("basketball");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("soccer");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("football");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("hockey");
-        treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Phòng gia đình");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("hot dogs");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("pizza");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("ravioli");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("bananas");
-        treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Phòng VIP");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("234");
-        treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jTree1.setMaximumSize(new java.awt.Dimension(150, 64));
         jTree1.setMinimumSize(new java.awt.Dimension(50, 0));
         jTree1.setPreferredSize(new java.awt.Dimension(150, 64));
+        jTree1.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jTree1AncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         jScrollPane1.setViewportView(jTree1);
 
         jSplitPane1.setLeftComponent(jScrollPane1);
@@ -267,18 +575,13 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
         jScrollPane3.setViewportView(txaAddress);
 
         try{
-            txfPhone = new JFormattedTextField(new MaskFormatter("###########"));
-        }catch(java.text.ParseException e){
-            e.printStackTrace();
-        }
-
-        try{
             txfCMND = new JFormattedTextField(new MaskFormatter("#########"));
         }catch(java.text.ParseException e){
             e.printStackTrace();
         }
 
         lblWarnName.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblWarnName.setForeground(new java.awt.Color(255, 0, 0));
         lblWarnName.setMaximumSize(new java.awt.Dimension(170, 20));
         lblWarnName.setMinimumSize(new java.awt.Dimension(170, 20));
         lblWarnName.setPreferredSize(new java.awt.Dimension(170, 20));
@@ -288,32 +591,22 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
         lblDateOfBirthWarning.setPreferredSize(new java.awt.Dimension(170, 20));
 
         lblPhoneWarning.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblPhoneWarning.setForeground(new java.awt.Color(255, 0, 0));
         lblPhoneWarning.setMaximumSize(new java.awt.Dimension(170, 20));
         lblPhoneWarning.setMinimumSize(new java.awt.Dimension(170, 20));
         lblPhoneWarning.setPreferredSize(new java.awt.Dimension(170, 20));
 
         lblIDWarning.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblIDWarning.setForeground(new java.awt.Color(255, 0, 0));
         lblIDWarning.setMaximumSize(new java.awt.Dimension(170, 20));
         lblIDWarning.setMinimumSize(new java.awt.Dimension(170, 20));
         lblIDWarning.setPreferredSize(new java.awt.Dimension(170, 20));
 
-        try{
-            txfDate = new JFormattedTextField(new MaskFormatter("##"));
-        }catch(java.text.ParseException e){
-            e.printStackTrace();
-        }
-
         lblPassport.setText("hoặc Passport");
 
-        lblDay.setText("DD");
+        cbDay.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
 
-        lblMonth.setText("MM");
-
-        try{
-            txfMonth = new JFormattedTextField(new MaskFormatter("##"));
-        }catch(java.text.ParseException e){
-            e.printStackTrace();
-        }
+        cbMonth.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12", " " }));
 
         javax.swing.GroupLayout pnInformationsLayout = new javax.swing.GroupLayout(pnInformations);
         pnInformations.setLayout(pnInformationsLayout);
@@ -362,13 +655,9 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
                         .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtPlaceOfBirth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(pnInformationsLayout.createSequentialGroup()
-                                .addComponent(txfDate, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblDay)
-                                .addGap(27, 27, 27)
-                                .addComponent(txfMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblMonth)
+                                .addComponent(cbDay, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cbMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(cbYear, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnInformationsLayout.createSequentialGroup()
@@ -386,23 +675,23 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
                             .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblIDWarning, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPhoneWarning, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(lblWarnName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                        .addComponent(lblDateOfBirthWarning, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lblDateOfBirthWarning, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblPhoneWarning, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblIDWarning, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblWarnName, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         pnInformationsLayout.setVerticalGroup(
             pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnInformationsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblWarnName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblName)
-                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblName)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 53, Short.MAX_VALUE)
                 .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnInformationsLayout.createSequentialGroup()
                         .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -411,14 +700,13 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
                             .addComponent(txtNationality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblDateOfBirthWarning, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblDateOfBirthWarning, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lblDateOfBirth)
                         .addComponent(cbYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txfDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblDay)
-                        .addComponent(lblMonth)
-                        .addComponent(txfMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cbDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPlaceOfBirth)
@@ -442,33 +730,21 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
                     .addComponent(txfCMND, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblIDWarning, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblPassport))
-                .addGap(11, 11, 11)
-                .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblIssuedBy)
-                    .addComponent(txtIssuedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnInformationsLayout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(lblIssuedBy))
+                    .addGroup(pnInformationsLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(txtIssuedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnInformationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblNote)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(58, 58, 58))
+                .addGap(38, 38, 38))
         );
 
         jSplitPane1.setRightComponent(pnInformations);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 844, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jButton2.setText("OK");
 
         jmHethong.setText("Hệ Thống");
 
@@ -485,6 +761,10 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
         });
         jmHethong.add(jMenuItem2);
 
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem3.setText("Exit");
+        jmHethong.add(jMenuItem3);
+
         jMenuBar1.add(jmHethong);
 
         jmDanhmuc.setText("Danh Mục");
@@ -497,10 +777,13 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 844, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(370, 370, 370)
-                .addComponent(jButton2)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 851, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(335, 335, 335)
+                .addComponent(btnOk1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -508,10 +791,14 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 23, Short.MAX_VALUE))
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnOk1)
+                .addContainerGap())
         );
 
         pack();
@@ -537,6 +824,99 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void btnOk1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOk1ActionPerformed
+
+        if(txtName.getText().equals("")){
+            lblWarnName.setText("Tên không được để trống");            
+        }else{
+            lblWarnName.setText("");
+        }
+        if(txfPhone.getText().equals("")){
+            lblPhoneWarning.setText("Số đt không được để trống");
+        }else{
+            lblPhoneWarning.setText("");
+        }
+        if(txfCMND.getText().endsWith(" ")){
+            lblIDWarning.setText("CMND không được để trống");
+        }
+        else{
+            lblIDWarning.setText("");
+        }
+        if(txtName.getText().equals("")==false && txfPhone.getText().equals("")== false && txfCMND.getText().endsWith(" ") == false ){
+            dialogCheckIn.setLocationRelativeTo(null);
+            dialogCheckIn.setVisible(true);
+        }
+    }//GEN-LAST:event_btnOk1ActionPerformed
+
+    private void tbSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbSettingActionPerformed
+        dialogSetting.setLocationRelativeTo(null);
+        dialogSetting.setVisible(true);
+    }//GEN-LAST:event_tbSettingActionPerformed
+
+    private void tbAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbAdminActionPerformed
+
+    }//GEN-LAST:event_tbAdminActionPerformed
+
+    private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
+
+        addInformation();
+        addCheckIn();
+    }//GEN-LAST:event_btnOkActionPerformed
+
+    private void jTree1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jTree1AncestorAdded
+        DefaultTreeModel model = (DefaultTreeModel) jTree1.getModel();
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String connectionString = "jdbc:sqlserver://localhost:1433;databaseName=HotelManagement";
+            Connection con = DriverManager.getConnection(connectionString, "taobivocam9x", "duc12345");
+            PreparedStatement ps = con.prepareStatement("select * from Room");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String type = rs.getString(2);
+                String status = rs.getString(3);
+
+                if(type.equals("Phòng đơn")){
+                    jTree1.setSelectionRow(1);
+                    TreePath path = jTree1.getSelectionPath();
+                    MutableTreeNode node = (MutableTreeNode) path.getLastPathComponent();
+                    MutableTreeNode newNode = new DefaultMutableTreeNode(id +"("+status+")");
+                    model.insertNodeInto(newNode, node, node.getChildCount());
+                }
+                if(type.equals("Phòng đôi")){
+                    jTree1.setSelectionRow(2);
+                    TreePath path = jTree1.getSelectionPath();
+                    MutableTreeNode node = (MutableTreeNode) path.getLastPathComponent();
+                    MutableTreeNode newNode = new DefaultMutableTreeNode(id +"("+status+")");
+                    model.insertNodeInto(newNode, node, node.getChildCount());
+                }
+                if(type.equals("Phòng gia đình")){
+                    jTree1.setSelectionRow(3);
+                    TreePath path = jTree1.getSelectionPath();
+                    MutableTreeNode node = (MutableTreeNode) path.getLastPathComponent();
+                    MutableTreeNode newNode = new DefaultMutableTreeNode(id +"("+status+")");
+                    model.insertNodeInto(newNode, node, node.getChildCount());
+                }
+                if(type.equals("Phòng VIP")){
+                    jTree1.setSelectionRow(4);
+                    TreePath path = jTree1.getSelectionPath();
+                    MutableTreeNode node = (MutableTreeNode) path.getLastPathComponent();
+                    MutableTreeNode newNode = new DefaultMutableTreeNode(id +"("+status+")");
+                    model.insertNodeInto(newNode, node, node.getChildCount());
+                }
+            }
+            
+            ps.close();
+            con.close();
+        } catch (ClassNotFoundException ex) {
+        } catch (SQLException ex) {
+        }
+    }//GEN-LAST:event_jTree1AncestorAdded
+
+    private void jPanel4AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jPanel4AncestorAdded
+        txtHours.setText(currenttime);
+    }//GEN-LAST:event_jPanel4AncestorAdded
 
     /**
      * @param args the command line arguments
@@ -564,6 +944,7 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
             java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -574,17 +955,38 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnOk;
+    private javax.swing.JButton btnOk1;
+    private javax.swing.JButton btnSave;
+    private javax.swing.JComboBox cbDay;
     private javax.swing.JComboBox cbGender;
+    private javax.swing.JComboBox cbMonth;
     private javax.swing.JComboBox cbYear;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JDialog dialogCheckIn;
+    private javax.swing.JDialog dialogSetting;
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTree jTree1;
@@ -594,12 +996,10 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
     private javax.swing.JLabel lblCMND;
     private javax.swing.JLabel lblDateOfBirth;
     private javax.swing.JLabel lblDateOfBirthWarning;
-    private javax.swing.JLabel lblDay;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblGender;
     private javax.swing.JLabel lblIDWarning;
     private javax.swing.JLabel lblIssuedBy;
-    private javax.swing.JLabel lblMonth;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblNationality;
     private javax.swing.JLabel lblNote;
@@ -608,8 +1008,8 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
     private javax.swing.JLabel lblPhoneWarning;
     private javax.swing.JLabel lblPlaceOfBirth;
     private javax.swing.JLabel lblWarnName;
-    private javax.swing.JPanel pnCheckIN;
     private javax.swing.JPanel pnInformations;
+    private javax.swing.JPanel pnRequest2;
     private javax.swing.JToggleButton tbAdmin;
     private javax.swing.JToggleButton tbRedo;
     private javax.swing.JToggleButton tbSearch;
@@ -617,21 +1017,25 @@ public class Menu extends javax.swing.JFrame implements UndoableEditListener{
     private javax.swing.JToggleButton tbUndo;
     private javax.swing.JTextArea txaAddress;
     private javax.swing.JTextArea txaNote;
+    private javax.swing.JTextArea txaRequest;
+    private javax.swing.JFormattedTextField txfAdult;
     private javax.swing.JFormattedTextField txfCMND;
-    private javax.swing.JFormattedTextField txfDate;
-    private javax.swing.JFormattedTextField txfMonth;
+    private javax.swing.JFormattedTextField txfCheckOut;
+    private javax.swing.JFormattedTextField txfChild;
+    private javax.swing.JFormattedTextField txfDayArrived;
+    private javax.swing.JFormattedTextField txfDayBook;
+    private javax.swing.JFormattedTextField txfDeposit;
     private javax.swing.JFormattedTextField txfPhone;
+    private javax.swing.JFormattedTextField txfRoomNumber;
     private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtHours;
     private javax.swing.JTextField txtIssuedBy;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtNationality;
     private javax.swing.JTextField txtPlaceOfBirth;
     // End of variables declaration//GEN-END:variables
 
-//    @Override
-//    public void undoableEditHappened(UndoableEditEvent e) {
-//        manager.addEdit(e.getEdit());
-//    }
+
 
     @Override
     public void undoableEditHappened(UndoableEditEvent e) {
